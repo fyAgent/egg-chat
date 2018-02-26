@@ -1,0 +1,165 @@
+$chat_area: rgb(245, 245, 245); //聊天背景
+$slider_l: rgb(38, 41, 45); //最左侧菜单栏
+$slider_r: rgb(236, 234, 232); //左侧列表栏
+.container {
+    height: 500px;
+    width: 786px;
+    .slider {
+        flex-basis: 312px;
+        .col_l {
+            background: $slider_l;
+            flex-basis: 20%;
+            padding:10px 0;
+            .headImg {
+                
+                    width: 32px;
+                    height: 32px;
+               
+            }
+        }
+        .col_r {
+            background: $slider_r;
+        }
+    }
+    .major {
+        .chat_header {
+            flex-basis: 15%;
+            background: $chat_area;
+            border-bottom: 1px solid rgb(231, 231, 231);
+        }
+        .chat_area {
+            background: $chat_area;
+            flex-basis: 60%;
+            box-sizing: border-box;
+            padding: 10px 30px 12px 30px;
+            .time_line {
+                span {
+                    padding: 2px 8px;
+                    border-radius: 5px;
+                    color: #fff;
+                    font-size: 10px;
+                    background: rgb(218, 218, 218);
+                }
+            }
+            .msg_box {
+                padding: 15px;
+                .msg_box_l {
+                    box-sizing: border-box;
+                    padding: 10px;
+                    img {
+                        width: 26px;
+                        height: 26px;
+                    }
+                }
+                .msg_box_r {
+                    .title {
+                        color: rgb(178, 178, 178);
+                    }
+                    p {
+                        background: #fff;
+                        color: rgb(35, 35, 35);
+                        font-size: 14px;
+                        padding: 5px;
+                        margin: 5px 0;
+                        border-radius: 5px;
+                        position: relative;
+                        &::before {
+                            position: absolute;
+                            content: "";
+                            height: 0;
+                            width: 0;
+                            border-right: 5px solid #fff;
+                            border-top: 4.5px solid transparent;
+                            border-bottom: 4.5px solid transparent;
+                            right: 100%;
+                            top: 0;
+                            bottom: 0;
+                            margin: auto;
+                        }
+                    }
+                }
+                &.self {
+                    .msg_box_r {
+                        // background: rgb(158,234,106);
+                        p {
+                            background: rgb(158, 234, 106);
+                            &::after {
+                                position: absolute;
+                                content: "";
+                                height: 0;
+                                width: 0;
+                                border-left: 5px solid rgb(158, 234, 106);
+                                border-top: 4.5px solid transparent;
+                                border-bottom: 4.5px solid transparent;
+                                left: 100%;
+                                top: 0;
+                                bottom: 0;
+                                margin: auto;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .chat_footer {
+            .util_box {
+                height: 35px;
+                background: red;
+            }
+            .textarea {
+                height: 60px;
+                padding: 5px 15px 6px 15px;
+                box-sizing: border-box;
+                textarea {
+                    padding: 0;
+                    margin: 0;
+                    border: none;
+                    resize: none;
+                    outline: none;
+                }
+            }
+            .bottom {
+                padding: 0px 0px 0px 15px;
+                .subBtn {
+                    padding: 4px 8px;
+                    border-radius: 5px;
+                    background: rgb(245, 245, 245);
+                    color: rgb(96, 96, 96);
+                    &:hover {
+                        background: rgb(18, 150, 17);
+                        color: #fff;
+                    }
+                }
+            }
+        }
+    }
+    .cover {
+        background: #000;
+        font-size: 35px;
+        color: #fff;
+        &.active {}
+        h3.title {
+            font-weight: 100;
+            margin-top: 150px;
+        }
+        .nickName {
+            font-size: 35px;
+            background: none;
+            color: #fff;
+            margin: 0 auto;
+            width: 350px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #fff;
+        }
+    }
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity .5s;
+    }
+    .fade-enter,
+    .fade-leave-to
+    /* .fade-leave-active below version 2.1.8 */
+        {
+        opacity: 0;
+    }
+}

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/base.js"></script>
+</head>
+
+<body class="full p_r">
+    <div id="app" class="pos_C container flex">
+
+        <div class="slider shrink0 flex ">
+            <div class="col_l shrink0 textC">
+                <img class="headImg" :src="userInfo.headImg" alt="" />
+            </div>
+            <div class="col_r grow1">
+
+            </div>
+        </div>
+        <div class="major fullY grow1 flex column">
+            <div class="chat_header shrink0">
+
+            </div>
+            <div class="chat_area shrink0  overS  hide_bar" ref="chatArea">
+
+                <label v-for="(val,idx) in chatMes" :key="idx">
+                    <div v-if="val.tag=='join'" class="time_line fullX flexC justC">
+                        <span>{{val.time}} {{val.msg}}加入聊天室</span>
+                    </div>
+                    <div class="msg_box flex" :class="val.isMe ? 'self row_r' :''" v-else-if="val.tag=='msg'">
+
+                        <div class="msg_box_l" >
+                            <img :src="userInfo.headImg" alt=""/>
+                        </div>
+                        <div class="msg_box_r" :class="val.isMe ? 'flexC' : ''">
+                            <div class="title" v-if="!val.isMe">{{val.msg.nickName}}</div>
+                            <p v-html="val.msg.msg"></p>
+                        </div>
+
+                    </div>
+
+                </label>
+            </div>
+            <div class="chat_footer bd_f shrink0 grow1  flex column">
+                <div class="util_box shrink0">
+
+                </div>
+                <div class="textarea shrink0">
+                    <textarea @keyup.ctrl.13="send" @input.trim="userInpt" :value="msg" ref="textarea" class="full hide_bar" cols="30" rows="3"></textarea>
+                </div>
+                <div class="bottom grow1 flex row_r">
+                    <span class="subBtn flexC justC pointer" @click="send">发送</span>
+                </div>
+            </div>
+        </div>
+        <transition name="fade">
+            <div v-if="!userInfo.nickName" class="cover column flexC flex p_a zIdx100 full t0 l0">
+
+                <h3 class="title textC">
+                    来一个炫酷的名字吧~
+                </h3>
+
+                <input autofocus class="nickName" @keyup.13="changeName" type="text">
+            </div>
+
+        </transition>
+    </div>
+
+    <script>
+    </script>
+    <script>
+        let log = console.log,
+
+
+            vm = new Vue({
+                el: "#app",
+                data: {
+                    userInfo: {
+                        nickName: "",
+                        headImg: "/public/image/head/head.jpg"
+                    },
+                    msg: "",
+                    userList: [],
+                    chatMes: [
+
+                    ]
+
+                },
+                watch: {
+                    chatMes: function () {
+                        this.$nextTick(_ => {
+                            this.$refs.chatArea.scrollTop = this.$refs.chatArea.scrollHeight - this.$refs
+                                .chatArea.offsetHeight
+                        })
+
+
+                    }
+                },
+                created() {
+                    this.init()
+                },
+                methods: {
+                    init() {
+
+                        io = io("/chat").connect();
+
+                        io.on("connect", res => {
+
+                        });
+
+                        io.on("joinRoom", res => { //新用户加入
+                            const time = BASE.getTime("hh-mm-ss")
+
+                            this.userList.push(res);
+                            this.chatMes.push({
+                                tag: "join",
+                                msg: res.nickName,
+                                time
+                            })
+                        })
+                        io.on("getMsg", res => {
+
+                            this.chatMes.push({
+                                tag: "msg",
+                                isMe: this.userInfo.nickName === res.nickName ? true : false,
+                                msg: res
+                            })
+
+                        })
+
+
+                    },
+                    changeName(e) {
+                        const value = BASE.reg.trim(e.target.value);
+                        this.userInfo.nickName = value;
+                        
+                        io.emit("login", {
+                            name: value
+                        })
+
+                        this.$refs.textarea.focus();
+
+                    },
+                    send: function () {
+                        const msg = BASE.reg.trim(this.msg.replace(/\n/g, "<br/>"));
+                        if(!msg) return;
+                        io.emit("sendMsg", {
+                            nickName: this.userInfo.nickName,
+                            msg
+                        })
+
+                        this.msg = ""
+                    },
+                    userInpt: function (e) {
+
+                        this.msg = e.target.value;
+
+                    },
+                    upLoadHeadImg:function(){
+
+                    }
+
+
+                }
+            })
+    </script>
+</body>
+
+</html>
