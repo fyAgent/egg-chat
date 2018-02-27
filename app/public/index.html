@@ -18,8 +18,25 @@
     <div id="app" class="pos_C container flex">
 
         <div class="slider shrink0 flex ">
-            <div class="col_l shrink0 textC">
-                <img class="headImg" :src="userInfo.headImg" alt="" />
+            <div class="col_l shrink0 textC bd_f p_r">
+                <div class="cursor">
+                    <img class="head_img pointer" :src="userInfo.headImg" alt="" />
+
+                    <div class="head_img_box p_a bd_f ">
+                        <div class="head_l flex justSb pointer">
+                            <div class="head_name flexC bd_f ">
+                                <p>武九</p>
+                                <img src="./image/icon/wan_head.png" alt="">
+                            </div>
+                            <label class="pointer" for="upload">
+                                <img class="head_img " :src="userInfo.headImg" alt="" />
+                            </label>
+
+                            <input id="upload" name="file" class="d_n" @change="upload" type="file">
+
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col_r grow1">
 
@@ -37,8 +54,8 @@
                     </div>
                     <div class="msg_box flex" :class="val.isMe ? 'self row_r' :''" v-else-if="val.tag=='msg'">
 
-                        <div class="msg_box_l" >
-                            <img :src="userInfo.headImg" alt=""/>
+                        <div class="msg_box_l">
+                            <img :src="userInfo.headImg" alt="" />
                         </div>
                         <div class="msg_box_r" :class="val.isMe ? 'flexC' : ''">
                             <div class="title" v-if="!val.isMe">{{val.msg.nickName}}</div>
@@ -100,8 +117,6 @@
                             this.$refs.chatArea.scrollTop = this.$refs.chatArea.scrollHeight - this.$refs
                                 .chatArea.offsetHeight
                         })
-
-
                     }
                 },
                 created() {
@@ -141,7 +156,7 @@
                     changeName(e) {
                         const value = BASE.reg.trim(e.target.value);
                         this.userInfo.nickName = value;
-                        
+
                         io.emit("login", {
                             name: value
                         })
@@ -151,7 +166,7 @@
                     },
                     send: function () {
                         const msg = BASE.reg.trim(this.msg.replace(/\n/g, "<br/>"));
-                        if(!msg) return;
+                        if (!msg) return;
                         io.emit("sendMsg", {
                             nickName: this.userInfo.nickName,
                             msg
@@ -164,9 +179,32 @@
                         this.msg = e.target.value;
 
                     },
-                    upLoadHeadImg:function(){
+                    upLoadHeadImg: function () {
 
-                    }
+                    },
+                    upload: function (e) {
+                        const isImg = BASE.reg.isImg(e.target.files[0].type);
+                        
+                        if (!isImg) {
+                            alert("只能上传图片")
+                            return;
+                        }
+                        BASE.turnBase64(e, res => {
+                            let base64 = res;
+                            io.emit("upload",{
+                                msg:base64
+                            })
+                        })
+
+
+
+
+                        //  BASE.turnBase64(e,res=>{
+                        //      console.log(res)
+                        //  })
+
+                    },
+
 
 
                 }

@@ -7,9 +7,21 @@
       background: #26292d;
       flex-basis: 20%;
       padding: 10px 0; }
-      .container .slider .col_l .headImg {
+      .container .slider .col_l .cursor:hover .head_img_box {
+        display: block; }
+      .container .slider .col_l .cursor .head_img {
         width: 32px;
         height: 32px; }
+      .container .slider .col_l .cursor .head_img_box {
+        display: none;
+        width: 300px;
+        border-radius: 10px;
+        top: 5.5%;
+        left: 50%;
+        box-sizing: border-box;
+        padding: 23px; }
+        .container .slider .col_l .cursor .head_img_box p {
+          padding-right: 5px; }
     .container .slider .col_r {
       background: #eceae8; }
   .container .major .chat_header {

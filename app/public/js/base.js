@@ -62,6 +62,7 @@ let BASE = {
 
 
     },
+
     scrollTop() { //回滚顶部
         if (window.requestAnimationFrame) {
             (function beginScroll() {
@@ -107,6 +108,11 @@ let BASE = {
             var Reg = /\s+/g
             return req.replace(Reg, "");
 
+        },
+        isImg(req){
+            
+            var Reg = /image/ig;
+            return Reg.test(req)
         }
     },
     parseURL(url) {

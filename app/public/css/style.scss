@@ -9,12 +9,27 @@ $slider_r: rgb(236, 234, 232); //左侧列表栏
         .col_l {
             background: $slider_l;
             flex-basis: 20%;
-            padding:10px 0;
-            .headImg {
-                
+            padding: 10px 0;
+            .cursor {
+                &:hover .head_img_box{
+                    display: block;
+                }
+                .head_img {
                     width: 32px;
                     height: 32px;
-               
+                }
+                .head_img_box {
+                    display: none;
+                    width: 300px;
+                    border-radius: 10px;
+                    top: 5.5%;
+                    left: 50%;
+                    box-sizing: border-box;
+                    padding: 23px;
+                    p {
+                        padding-right: 5px;
+                    }
+                }
             }
         }
         .col_r {
