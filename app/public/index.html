@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    <script src="/public/js/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="./css/global.css">
@@ -150,12 +150,16 @@
                             })
 
                         })
+                        io.on("loginRes", res => {
+
+                            this.userInfo = res;
+                        })
 
 
                     },
                     changeName(e) {
                         const value = BASE.reg.trim(e.target.value);
-                        this.userInfo.nickName = value;
+
 
                         io.emit("login", {
                             name: value
@@ -186,22 +190,25 @@
                         const isImg = BASE.reg.isImg(e.target.files[0].type);
                         
                         if (!isImg) {
-                            alert("只能上传图片")
+                            alert("文件格式不正确")
                             return;
                         }
+                        const typ=e.target.files[0].type.split("/")[1]
                         BASE.turnBase64(e, res => {
                             let base64 = res;
-                            io.emit("upload",{
-                                msg:base64
+                            io.emit("upload", {
+                                userInfo: this.userInfo,
+                                msg:{
+                                    typ,
+                                    base64
+                                }
                             })
                         })
 
 
 
 
-                        //  BASE.turnBase64(e,res=>{
-                        //      console.log(res)
-                        //  })
+
 
                     },
 

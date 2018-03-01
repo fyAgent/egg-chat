@@ -3,9 +3,10 @@ $slider_l: rgb(38, 41, 45); //最左侧菜单栏
 $slider_r: rgb(236, 234, 232); //左侧列表栏
 .container {
     height: 500px;
-    width: 786px;
+    width : 785px;
+   
     .slider {
-        flex-basis: 312px;
+        flex-basis:39%;
         .col_l {
             background: $slider_l;
             flex-basis: 20%;

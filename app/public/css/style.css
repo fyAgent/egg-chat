@@ -1,8 +1,8 @@
 .container {
   height: 500px;
-  width: 786px; }
+  width: 785px; }
   .container .slider {
-    flex-basis: 312px; }
+    flex-basis: 39%; }
     .container .slider .col_l {
       background: #26292d;
       flex-basis: 20%;
