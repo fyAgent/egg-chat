@@ -1,6 +1,17 @@
 .container {
   height: 500px;
   width: 785px; }
+  .container .shadow {
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000; }
+    .container .shadow .head_editer {
+      width: 200px;
+      height: 235px;
+      top: -25%; }
+      .container .shadow .head_editer .banner {
+        height: 35px; }
+      .container .shadow .head_editer .head_img {
+        height: 200px; }
   .container .slider {
     flex-basis: 39%; }
     .container .slider .col_l {
@@ -125,8 +136,7 @@
   .container .fade-leave-active {
     transition: opacity .5s; }
   .container .fade-enter,
-  .container .fade-leave-to
-   {
+  .container .fade-leave-to {
     opacity: 0; }
 
 /*# sourceMappingURL=style.css.map */

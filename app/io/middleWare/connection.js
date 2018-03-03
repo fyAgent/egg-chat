@@ -1,9 +1,10 @@
 module.exports = app => {
-    return async (ctx, next)=>{
+    return async (ctx, next) => {
         console.log("链接")
-        
+
         await next()
-        console.log("失去链接")
+        console.log("断开")
+
 
     }
 }

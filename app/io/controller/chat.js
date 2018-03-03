@@ -5,6 +5,7 @@ class Chat extends Controller{
         const {ctx,app }=this;
 
         const msg=ctx.args[0];
+        debugger
         const nsp=app.io.of("/chat");
         await ctx.service.chat.chat(msg);//存数据库
 

@@ -147,20 +147,43 @@ let BASE = {
         };
         a = null;
     },
-    getTime(typ, init) {
-        var date = init ? new Date(init) : new Date();
-        var h = date.getHours(),
-            m = date.getMinutes(),
-            s = date.getSeconds();
+    time:{
+        parseTime(typ, init) {
+            var date = init ? new Date(init) : new Date();
+            var h = date.getHours(),
+                m = date.getMinutes(),
+                s = date.getSeconds();
 
-        switch (typ) {
-            case "hh-mm-ss":
-               
-                return h + ":" + m + ":" + s
-                break;
+            switch (typ) {
+                case "hh-mm-ss":
 
-            default:
-                return ""
+                    return h + ":" + m + ":" + s
+                    break;
+
+                default:
+                    return ""
+            }
+        },
+        getFulture(expires=1,typ="day",parse=false){
+            const date = new Date().getTime();
+
+            if(typeof(expires)!=="number"){
+              
+                return "请输入正确的格式"
+            }
+            switch (typ) {
+                case "day":
+                                  
+                    const add_ms = expires*1000*60*60*24;
+                     return new Date(add_ms + date);
+                 
+
+                    break;
+            
+                default:
+                    break;
+            }
+
         }
     }
 }

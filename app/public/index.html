@@ -15,8 +15,18 @@
 </head>
 
 <body class="full p_r">
-    <div id="app" class="pos_C container flex">
-
+    <div id="app" class="pos_C container flex p_r">
+        <!-- <div class="full p_a shadow" @click="hiddenShadow=!hiddenShadow" :hidden="hiddenShadow">
+            <div class="pos_C head_editer" @click="e=>e.stopPropagation()">
+                <div class="banner"></div>
+                <img :src="userInfo.headImg" alt="" class="fullX head_img">
+                <form :action="`/uploadFile?_csrf=${csrfToken}`" method="post" enctype="application/x-www-form-urlencoded">
+                  
+                    <input type="file" name="file" id="file1" />
+                    <button type="submit">提交</button>
+                </form>
+            </div>
+        </div> -->
         <div class="slider shrink0 flex ">
             <div class="col_l shrink0 textC bd_f p_r">
                 <div class="cursor">
@@ -28,9 +38,14 @@
                                 <p>武九</p>
                                 <img src="./image/icon/wan_head.png" alt="">
                             </div>
-                            <label class="pointer" for="upload">
+                            <!--   -->
+                            <label for="upload" class="pointer">
                                 <img class="head_img " :src="userInfo.headImg" alt="" />
                             </label>
+
+                            <!-- <label class="pointer" @click="hiddenShadow=!hiddenShadow">
+                                <img class="head_img " :src="userInfo.headImg" alt="" />
+                            </label> -->
 
                             <input id="upload" name="file" class="d_n" @change="upload" type="file">
 
@@ -49,9 +64,10 @@
             <div class="chat_area shrink0  overS  hide_bar" ref="chatArea">
 
                 <label v-for="(val,idx) in chatMes" :key="idx">
-                    <div v-if="val.tag=='join'" class="time_line fullX flexC justC">
-                        <span>{{val.time}} {{val.msg}}加入聊天室</span>
+                    <div v-if="val.tag=='join' || val.tag=='leave' " class="time_line fullX flexC justC">
+                        <span>{{val.time}} {{val.msg}} {{val.tag=='leave' ? '离开' : '加入'}}聊天室</span>
                     </div>
+
                     <div class="msg_box flex" :class="val.isMe ? 'self row_r' :''" v-else-if="val.tag=='msg'">
 
                         <div class="msg_box_l">
@@ -108,7 +124,9 @@
                     userList: [],
                     chatMes: [
 
-                    ]
+                    ],
+                    hiddenShadow: true,//头像编辑栏是否显示
+                    csrfToken:""
 
                 },
                 watch: {
@@ -117,14 +135,17 @@
                             this.$refs.chatArea.scrollTop = this.$refs.chatArea.scrollHeight - this.$refs
                                 .chatArea.offsetHeight
                         })
-                    }
+                    },
+
                 },
                 created() {
                     this.init()
                 },
                 methods: {
                     init() {
-
+                        const csrfToken=BASE.getCookie("csrfToken");
+                        
+                        this.csrfToken=csrfToken
                         io = io("/chat").connect();
 
                         io.on("connect", res => {
@@ -132,14 +153,31 @@
                         });
 
                         io.on("joinRoom", res => { //新用户加入
-                            const time = BASE.getTime("hh-mm-ss")
+                            const time = BASE.time.parseTime("hh-mm-ss")
 
                             this.userList.push(res);
                             this.chatMes.push({
                                 tag: "join",
                                 msg: res.nickName,
                                 time
+                            });
+                        })
+                        io.on("leaveRoom", res => {//有用户离开房间
+
+                            const time = BASE.time.parseTime("hh-mm-ss")
+
+                            for (let i in this.userList) {
+                                if (this.userList[i].id === res.id) {
+                                    console.log(i)
+                                }
+                            }
+                            console.log(this.userList)
+                            this.chatMes.push({
+                                tag: "leave",
+                                msg: res.nickName,
+                                time
                             })
+
                         })
                         io.on("getMsg", res => {
 
@@ -153,8 +191,11 @@
                         io.on("loginRes", res => {
 
                             this.userInfo = res;
-                        })
+                            const expires = BASE.time.getFulture(1);
+                            document.cookie = `id=${res.id};expires=${expires};path=/`;//前端写入cookie 暂时不用了 使用后台的
 
+
+                        });
 
                     },
                     changeName(e) {
@@ -188,17 +229,17 @@
                     },
                     upload: function (e) {
                         const isImg = BASE.reg.isImg(e.target.files[0].type);
-                        
+
                         if (!isImg) {
                             alert("文件格式不正确")
                             return;
                         }
-                        const typ=e.target.files[0].type.split("/")[1]
+                        const typ = e.target.files[0].type.split("/")[1]
                         BASE.turnBase64(e, res => {
                             let base64 = res;
                             io.emit("upload", {
                                 userInfo: this.userInfo,
-                                msg:{
+                                msg: {
                                     typ,
                                     base64
                                 }
